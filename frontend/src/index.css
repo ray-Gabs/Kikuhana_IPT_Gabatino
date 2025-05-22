@@ -1,0 +1,36 @@
+@import "tailwindcss";
+
+/* === Agrandir font variants === */
+@font-face {
+  font-family: 'Agrandir';
+  src: url('/fonts/agrandir/Agrandir-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+}
+
+/* === Agrandir font === */
+@font-face {
+  font-family: 'Agrandir';
+  src: url('/fonts/agrandir/Agrandir-Regular.woff2') format('woff2');
+  font-weight: 900;
+  font-style: normal;
+}
+
+
+/* === Akziden font === */
+@font-face {
+  font-family: 'Akziden Grotesk';
+  src: url('/fonts/akziden/AGSchulbuchTwoBQ-Medium.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+}
+
+/* === Global font === */
+body {
+  font-family: 'Agrandir', sans-serif;
+}
+
+/* === Optional font for specific sections like Menu === */
+.akziden-font {
+  font-family: 'Akziden Grotesk', sans-serif;
+}
