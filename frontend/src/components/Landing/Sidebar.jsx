@@ -21,7 +21,6 @@ const Sidebar = ({ refs, activeSection, onScrollTo }) => {
         <ul className="akziden-font tracking-widest flex space-x-8 items-center text-base">
           <li className={linkClasses("dashboard")} onClick={() => onScrollTo(refs.dashboardRef)}>Home</li>
           <li className={linkClasses("about")} onClick={() => onScrollTo(refs.about)}>About</li>
-          <li className={linkClasses("location")} onClick={() => onScrollTo(refs.location)}>Location</li>
           <li className={linkClasses("menu")} onClick={() => onScrollTo(refs.menu)}>Menu</li>
           <li>
             <Link to="/login">
