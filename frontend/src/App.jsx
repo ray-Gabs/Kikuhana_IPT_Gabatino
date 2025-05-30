@@ -1,10 +1,10 @@
-import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
-import { createContext, useContext, useState, useEffect } from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import { createContext, useContext, useState } from 'react';
 import LandingPage from './pages/LandingPage';
 import LoginPage from './Pages/LoginPage';
 import AdminDashboard from './pages/AdminDashboard';
 
-// ✅ AUTH CONTEXT BUILT INTO THIS FILE
+
 const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
@@ -39,18 +39,18 @@ export const useAuth = () => useContext(AuthContext);
 export default function App() {
   return (
     <AuthProvider>
-      <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route
-          path="/admin"
-          element={
-            <ProtectedRoute>
-              <AdminDashboard />
-            </ProtectedRoute>
-          }
-        />
-      </Routes>
+            <Routes>
+              <Route path="/" element={<LandingPage />} />
+              <Route path="/login" element={<LoginPage />} />
+              <Route
+                path="/admin"
+                element={
+                  <ProtectedRoute>
+                    <AdminDashboard />
+                  </ProtectedRoute>
+                }
+              />
+            </Routes>
     </AuthProvider>
   );
 }

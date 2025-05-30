@@ -8,23 +8,23 @@ const menuRoutes = require("./routes/menuRoutes.js");
 
 const app = express();
 
-app.use(cors());
-app.use(express.json());
 
-// ✅ Serve uploaded images
+app.use(cors());
+app.use(express.json()); 
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-// ✅ Connect to DB
+
 connectDB().catch((err) => {
   console.error("Database connection failed:", err);
   process.exit(1);
 });
 
-// ✅ Routes
+
 app.use("/Menu", menuRoutes);
 
-// ✅ Error handler
+
 app.use(errorHandler);
+
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

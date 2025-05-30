@@ -4,7 +4,7 @@ const About = () => {
   return (
     <section className="min-height: 900px bg-white px-20 py-16 flex flex-col md:flex-row items-center justify-center gap-10">
 
-      {/* Left Side: Embedded Google Map */}
+
       <div className="w-full md:w-1/2 h-96 md:h-[500px] rounded-xl overflow-hidden shadow-lg">
       <iframe
         title="Kikuhana Location"
@@ -19,7 +19,7 @@ const About = () => {
 
     </div>
 
-      {/* Right Side: About Content */}
+      {/* About Content */}
       <div className="w-full md:w-1/2 text-justify animate-fade-in">
         <h2 className="text-4xl md:text-5xl font-black text-[#b90005] mb-6 font-agrandir tracking-wide text-left">
           About Kikuhana

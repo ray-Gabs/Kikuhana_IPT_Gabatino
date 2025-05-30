@@ -14,7 +14,7 @@ const Dashboard = ({ refs }) => {
   return (
     <section className="h-screen relative flex px-10 bg-gradient-to-br from-[#fff0f0] to-[#ffe6e6] overflow-hidden">
 
-      {/* LEFT: Text + Button */}
+
       <div className="w-1/2 flex flex-col justify-center items-start px-12 gap-4 z-10 mr-8">
         <h1 className="text-[4rem] md:text-[7rem] font-black uppercase text-black leading-tight drop-shadow-sm">
           キクハナ<br />
@@ -33,7 +33,7 @@ const Dashboard = ({ refs }) => {
         </button>
       </div>
 
-      {/* RIGHT: Logo & food image */}
+
       <div className="w-1/2 relative flex items-center justify-center">
         <img
           src={logo}

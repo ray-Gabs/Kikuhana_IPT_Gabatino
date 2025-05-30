@@ -1,4 +1,17 @@
+const fs = require("fs");
+const path = require("path");
 const menuCategoryService = require("../services/menuCategoryService");
+
+function deleteImageFile(relativePath) {
+  const fullPath = path.join(__dirname, "..", relativePath);
+  fs.unlink(fullPath, (err) => {
+    if (err) {
+      console.warn("Failed to delete file:", fullPath, err.message);
+    } else {
+      console.log("Deleted file:", fullPath);
+    }
+  });
+}
 
 class MenuCategoryController {
   async create(req, res) {
@@ -11,13 +24,14 @@ class MenuCategoryController {
   }
 
   async getAll(req, res) {
-    try {
-      const categories = await menuCategoryService.getAllCategories();
-      res.json(categories);
-    } catch (err) {
-      res.status(500).json({ error: err.message });
-    }
+  try {
+    const categories = await menuCategoryService.getAllCategories();
+    res.json(categories);
+  } catch (err) {
+    console.error("Error in getAll:", err); 
+    res.status(500).json({ error: err.message });
   }
+}
 
   async getById(req, res) {
     try {
@@ -41,8 +55,14 @@ class MenuCategoryController {
 
   async delete(req, res) {
     try {
-      const deleted = await menuCategoryService.deleteCategory(req.params.id);
-      if (!deleted) return res.status(404).json({ message: "Not found" });
+      const category = await menuCategoryService.getCategoryById(req.params.id);
+      if (!category) return res.status(404).json({ message: "Not found" });
+
+      category.items.forEach(item => {
+        item.images.forEach(imgPath => deleteImageFile(imgPath));
+      });
+
+      await menuCategoryService.deleteCategory(req.params.id);
       res.json({ message: "Deleted" });
     } catch (err) {
       res.status(500).json({ error: err.message });
@@ -50,47 +70,67 @@ class MenuCategoryController {
   }
 
   async addItemToCategory(req, res) {
-    try {
-      const { name, price } = req.body;
-      const images = req.files.map(file => `/uploads/${file.filename}`);
-      const category = await menuCategoryService.getCategoryById(req.params.categoryId);
-      if (!category) return res.status(404).json({ message: "Category not found" });
+  try {
+    const { name, price, description, variants } = req.body;
+    const images = req.files?.map(file =>
+      `/uploads/${file.filename}`.replace(/\\/g, "/")
+    ) || [];
 
-      const newItem = { name, price: parseFloat(price), images };
-      category.items.push(newItem);
-      await category.save();
+    const parsedVariants = variants ? JSON.parse(variants) : [];
 
-      res.status(201).json(category);
-    } catch (err) {
-      res.status(500).json({ error: err.message });
-    }
+    const category = await menuCategoryService.getCategoryById(req.params.categoryId);
+    if (!category) return res.status(404).json({ message: "Category not found" });
+
+    const newItem = {
+      name,
+      price: price ? parseFloat(price) : undefined, 
+      description: description || "",
+      images,
+      variants: parsedVariants,
+    };
+
+    category.items.push(newItem);
+    await category.save();
+
+    res.status(201).json(category);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
+}
 
   async updateItem(req, res) {
   try {
     const { categoryId, itemId } = req.params;
-    const { name, price } = req.body;
-    console.log("REQ BODY:", req.body);
-    console.log("REQ FILES:", req.files);
-    let images;
+    const { name, price, description, images: clientImageList, variants } = req.body;
+
+    const category = await menuCategoryService.getCategoryById(categoryId);
+    const item = category.items.find(i => i._id.toString() === itemId);
+    if (!item) return res.status(404).json({ message: "Item not found" });
+
+    let images = clientImageList || item.images;
+
     if (req.files && req.files.length > 0) {
-      images = req.files.map(file => `/uploads/${file.filename}`);
-    } else {
-      const original = await menuCategoryService.getCategoryById(categoryId);
-      const item = original.items.find(i => i._id.toString() === itemId);
-      images = item.images; // keep old images
+      item.images.forEach(img => deleteImageFile(img));
+      images = req.files.map(file =>
+        `/uploads/${file.filename}`.replace(/\\/g, "/")
+      );
     }
+
+    const parsedVariants = variants ? JSON.parse(variants) : item.variants;
 
     const updated = await menuCategoryService.updateItemInCategory(categoryId, itemId, {
       name,
-      price,
-      images
+      price: price ? parseFloat(price) : undefined, 
+      description: description || "",
+      images,
+      variants: parsedVariants,
     });
 
-    if (!updated) return res.status(404).json({ message: "Item not found" });
+    if (!updated) return res.status(404).json({ message: "Update failed" });
 
     res.json(updated);
   } catch (err) {
+    console.error("Update error:", err.message);
     res.status(500).json({ error: err.message });
   }
 }

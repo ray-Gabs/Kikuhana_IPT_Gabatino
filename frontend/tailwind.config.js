@@ -14,6 +14,10 @@ export default {
           '100%': { transform: 'translateY(100vh) rotate(360deg)', opacity: '0' },
         },
       },
+      fontFamily: {
+        agrandir: ['Agrandir', 'sans-serif'],
+        akziden: ['Akziden Grotesk', 'sans-serif'],
+      },
     },
   },
   plugins: [],
