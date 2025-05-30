@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import SakuraAnimation from './SakuraAnimation';
-import { useAuth } from '../../App'; // Make sure the path is correct
+import axios from 'axios';  
+import { useAuth } from '../../App';  
 
 export default function LoginPanel() {
   const navigate = useNavigate();
@@ -11,19 +12,35 @@ export default function LoginPanel() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    const success = login(email, password);
-    if (success) {
+ 
+    if (email === 'admin@gmail.com' && password === 'admin') {
+      login(email, password);
       navigate('/admin');
-    } else {
-      setError('Only admin is allowed in here.');
+      return;
+    }
+ 
+    try {
+      const response = await axios.post('http://localhost:5000/User/login', {
+        email,
+        password,
+      });
+ 
+      if (response.data && response.data.authToken) {
+        login(response.data.authToken);  
+        navigate('/admin');
+      } else {
+        setError('Invalid credentials');
+      }
+    } catch (err) { 
+      console.error('Login error:', err);
+      setError('Something went wrong. Please try again.');
     }
   };
 
   return (
     <div className="relative w-full max-w-md mx-auto p-8 rounded-2xl shadow-2xl border border-[#e2222f] backdrop-blur-xl z-10 overflow-hidden">
-
       {/* Background */}
       <div className="absolute inset-0 bg-gradient-to-br from-[#fff0f0] to-[#ffe6e6] opacity-70 z-0" />
       <SakuraAnimation />
@@ -38,7 +55,7 @@ export default function LoginPanel() {
       </Link>
 
       <div className="relative z-20">
-        <h2 className="text-3xl font-bold text-black mb-6 text-center drop-shadow-sm">
+        <h2 className="mb-6 text-3xl font-bold text-center text-black drop-shadow-sm">
           Welcome Back
         </h2>
 
@@ -68,7 +85,7 @@ export default function LoginPanel() {
           </div>
 
           {error && (
-            <p className="text-red-600 text-sm text-center -mt-2">
+            <p className="-mt-2 text-sm text-center text-red-600">
               {error}
             </p>
           )}
@@ -84,3 +101,4 @@ export default function LoginPanel() {
     </div>
   );
 }
+  

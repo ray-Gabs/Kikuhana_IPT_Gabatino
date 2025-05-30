@@ -3,7 +3,7 @@ import { createContext, useContext, useState } from 'react';
 import LandingPage from './pages/LandingPage';
 import LoginPage from './Pages/LoginPage';
 import AdminDashboard from './pages/AdminDashboard';
-
+import ManageUser from './pages/ManageUser';
 
 const AuthContext = createContext();
 
@@ -12,9 +12,10 @@ const AuthProvider = ({ children }) => {
     return localStorage.getItem('isLoggedIn') === 'true';
   });
 
-  const login = (email, password) => {
-    if (email === 'admin@gmail.com' && password === 'admin') {
+  const login = (token) => {
+    if (token) {
       localStorage.setItem('isLoggedIn', 'true');
+      localStorage.setItem('authToken', token);  // Save JWT token
       setIsLoggedIn(true);
       return true;
     }
@@ -23,6 +24,7 @@ const AuthProvider = ({ children }) => {
 
   const logout = () => {
     localStorage.removeItem('isLoggedIn');
+    localStorage.removeItem('authToken');
     setIsLoggedIn(false);
   };
 
@@ -35,22 +37,29 @@ const AuthProvider = ({ children }) => {
 
 export const useAuth = () => useContext(AuthContext);
 
-
 export default function App() {
   return (
     <AuthProvider>
-            <Routes>
-              <Route path="/" element={<LandingPage />} />
-              <Route path="/login" element={<LoginPage />} />
-              <Route
-                path="/admin"
-                element={
-                  <ProtectedRoute>
-                    <AdminDashboard />
-                  </ProtectedRoute>
-                }
-              />
-            </Routes>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute>
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin-manageUser"
+          element={
+            <ProtectedRoute>
+              <ManageUser />
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
     </AuthProvider>
   );
 }

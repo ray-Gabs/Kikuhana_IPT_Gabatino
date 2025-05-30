@@ -5,7 +5,7 @@ const path = require("path");
 const errorHandler = require("./middleware/errorHandler.js");
 const connectDB = require("./config/connection.js");
 const menuRoutes = require("./routes/menuRoutes.js");
-
+const userRoutes = require("./routes/userRoutes.js");
 const app = express();
 
 
@@ -21,7 +21,7 @@ connectDB().catch((err) => {
 
 
 app.use("/Menu", menuRoutes);
-
+app.use("/User", userRoutes);
 
 app.use(errorHandler);
 

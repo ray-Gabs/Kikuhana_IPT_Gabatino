@@ -30,10 +30,10 @@ const Menu = () => {
   };
 
   return (
-    <section className="min-h-screen px-6 py-10 bg-white flex flex-col md:flex-row gap-6">
+    <section className="flex flex-col min-h-screen gap-6 px-6 py-10 bg-white md:flex-row">
 
       <div className="md:w-1/2 w-full overflow-y-auto max-h-[calc(100vh-5rem)] pr-4 space-y-6 border-r border-gray-200">
-        <h2 className="text-5xl font-black tracking-wide mb-8 text-black">
+        <h2 className="mb-8 text-5xl font-black tracking-wide text-black">
           Our Menu
         </h2>
 
@@ -54,7 +54,7 @@ const Menu = () => {
             {expandedCategories[category._id] && (
               <>
                 {category.description && (
-                  <p className="text-2xl text-black agrandir-font mb-4">
+                  <p className="mb-4 text-2xl text-black agrandir-font">
                     {category.description}
                   </p>
                 )}
@@ -62,23 +62,27 @@ const Menu = () => {
                   {category.items.map((item) => (
                     <li key={item._id} className="px-2 py-1 rounded">
                       <div className="flex justify-between">
-                        <span className="font-semibold akziden-font text-xl">
+                        {/* Make the item name clickable */}
+                        <span
+                          className="text-xl font-semibold cursor-pointer akziden-font"
+                          onClick={() => setSelected(item)} // Make the item clickable even if no variants
+                        >
                           {item.name}
                         </span>
                         {item.price && (
-                          <span className="font-semibold akziden-font text-xl">
+                          <span className="text-xl font-semibold akziden-font">
                             ₱{item.price}
                           </span>
                         )}
                       </div>
 
-    
+                      {/* Handle variants if present */}
                       {item.variants?.length > 0 ? (
-                        <ul className="ml-4 text-gray-700 mt-1">
+                        <ul className="mt-1 ml-4 text-gray-700">
                           {item.variants.map((v, idx) => (
                             <li
                               key={idx}
-                              className="flex justify-between text-xl cursor-pointer hover:bg-gray-100 px-2 py-1 transition rounded agrandir-font"
+                              className="flex justify-between px-2 py-1 text-xl transition rounded cursor-pointer hover:bg-gray-100 agrandir-font"
                               onClick={() =>
                                 setSelected({ ...item, selectedVariant: v })
                               }
@@ -88,20 +92,7 @@ const Menu = () => {
                             </li>
                           ))}
                         </ul>
-                      ) : (
-                        <li
-                          className="cursor-pointer hover:bg-gray-100 px-2 py-1 mt-1 rounded transition"
-                          onClick={() => setSelected(item)}
-                        >
-                          <div className="flex flex-col">
-                            {item.description && (
-                              <p className="text-gray-600 text-sm">
-                                {item.description}
-                              </p>
-                            )}
-                          </div>
-                        </li>
-                      )}
+                      ) : null}
                     </li>
                   ))}
                 </ul>
@@ -111,7 +102,7 @@ const Menu = () => {
         ))}
       </div>
 
-
+      {/* Right side panel displaying selected item details */}
       <div className="md:w-1/2 w-full bg-[#fff0f0] p-6 rounded-xl shadow-lg flex flex-col items-center justify-center min-h-[400px] text-center overflow-auto">
         {selected ? (
           <div className="w-full max-w-2xl text-center">
@@ -120,26 +111,24 @@ const Menu = () => {
             </h3>
 
             {selected.description && (
-              <p className="text-lg text-gray-700 mb-3 agrandir-font">
+              <p className="mb-3 text-lg text-gray-700 agrandir-font">
                 {selected.description}
               </p>
             )}
 
-
             {selected.selectedVariant ? (
-              <p className="text-gray-800 mb-2 text-2xl agrandir-font font-bold">
+              <p className="mb-2 text-2xl font-bold text-gray-800 agrandir-font">
                 {selected.selectedVariant.type} - ₱{selected.selectedVariant.price}
               </p>
             ) : selected.price ? (
-              <p className="text-gray-800 mb-2 text-xl font-semibold agrandir-font">
+              <p className="mb-2 text-xl font-semibold text-gray-800 agrandir-font">
                 ₱{selected.price}
               </p>
             ) : null}
 
-
             {(selected.selectedVariant?.images?.length > 0 ||
               selected.images?.length > 0) ? (
-              <div className="flex gap-4 overflow-x-auto max-w-full pb-2 justify-center">
+              <div className="flex justify-center max-w-full gap-4 pb-2 overflow-x-auto">
                 {(selected.selectedVariant?.images || selected.images).map((img, i) => (
                   <img
                     key={i}
@@ -153,12 +142,12 @@ const Menu = () => {
               <img
                 src={logo}
                 alt="Fallback Logo"
-                className="w-40 h-40 object-contain mx-auto"
+                className="object-contain w-40 h-40 mx-auto"
               />
             )}
           </div>
         ) : (
-          <p className="text-gray-500 text-lg">
+          <p className="text-lg text-gray-500">
             Click a dish or variant to see more details
           </p>
         )}

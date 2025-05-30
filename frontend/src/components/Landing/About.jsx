@@ -19,7 +19,6 @@ const About = () => {
 
     </div>
 
-      {/* About Content */}
       <div className="w-full md:w-1/2 text-justify animate-fade-in">
         <h2 className="text-4xl md:text-5xl font-black text-[#b90005] mb-6 font-agrandir tracking-wide text-left">
           About Kikuhana
