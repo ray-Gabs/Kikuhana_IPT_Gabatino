@@ -1,7 +1,7 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { createContext, useContext, useState } from 'react';
 import LandingPage from './pages/LandingPage';
-import LoginPage from './Pages/LoginPage';
+import LoginPage from './pages/LoginPage';
 import AdminDashboard from './pages/AdminDashboard';
 import ManageUser from './pages/ManageUser';
 
